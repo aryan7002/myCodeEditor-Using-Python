@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import asksaveasfilename,askopenfilename
+import subprocess
 
 compiler =Tk()
 compiler.title('my codeEditor ')
@@ -21,18 +22,20 @@ def Save_as():
         set_file_path(path)
 
 def open_file():
-    path= askopenfilename(filetypes=[('Python Files','*.py')])
-    with open(path,'r')as file:
-        code =file.read()
-        editor.delete('1.0',END)
-        editor.insert('1.0',code)
+    path = askopenfilename(filetypes=[('Python Files', '*.py')])
+    with open(path, 'r') as file:
+        code = file.read()
+        editor.delete('1.0', END)
+        editor.insert('1.0', code)
         set_file_path(path)
 
 
 def run():
-    code= editor.get('1.0',END)
-    print(code)
-    exec(code)
+    command = f'{file_path}'
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+    output, error = process.communicate()
+    code_output.insert('1.0', output)
+    code_output.insert('1.0',  error)
 
 menu_bar= Menu(compiler)
 
@@ -52,6 +55,11 @@ compiler.config(menu=menu_bar)
 
 editor = Text()
 editor.pack()
+
+code_output=Text(height=7)
+lblter = Label(text=">terminal",bg = "black" , fg = "white" )
+lblter.pack()
+code_output.pack()
 
 
 compiler.mainloop()
