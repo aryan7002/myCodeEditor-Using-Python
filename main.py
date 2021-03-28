@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.filedialog import asksaveasfilename,askopenfilename
 import subprocess
+from tkinter import messagebox
 
 compiler =Tk()
 compiler.title('my codeEditor ')
@@ -22,6 +23,8 @@ def Save_as():
         set_file_path(path)
 
 def open_file():
+
+
     path = askopenfilename(filetypes=[('Python Files', '*.py')])
     with open(path, 'r') as file:
         code = file.read()
@@ -31,6 +34,9 @@ def open_file():
 
 
 def run():
+    if file_path == '':
+        messagebox.showwarning(title="save file", message='please save the file')
+        return
     command = f'{file_path}'
     process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     output, error = process.communicate()
